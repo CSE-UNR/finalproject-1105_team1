@@ -1,1 +1,59 @@
-Hello world
+Image Editor Design Document
+	Variables
+    • Image: A 2D array of integers “null-terminated” with a value of -1, with each item corresponding to a pixel’s brightness.
+    • Height: An integer which corresponds with the number of rows which make up the image.
+    • User Response: A char which stores the user’s interactions in menus.
+    • File: A pointer which points to the file at which the user is reading or writing image data.
+    • Fila Name: A string which stores the filename at which to store the image.
+
+	Functions
+    • main() (Gonzalez): 
+loop at least once, and until the user’s response is to exit the program
+	prompt the user for editing, loading, or displaying the image, as well as exiting
+	get the user’s response
+	if the user wants to load
+		run loadImage()
+	if the user wants to display
+		run displayImage()
+	if the user wants to edit
+		if the user wants to crop
+			run cropImage()
+		if the user wants to brighten
+			run modifyBrightness() with a modifier of 1
+		if the user wants to darken
+			run modifyBrightness() with a modifier of -1
+	if the user wants to exit
+		do nothing (to avoid printing an error message)
+	otherwise
+		print an “invalid response” type error message
+    • brightToChar() (Gonzalez): 
+take a passed integer brightness argument and pass it through a switch statement
+	to return the corresponding pixel character for that brightness
+    • saveImage() (Kassie):
+for every number between 0 and a passed number of rows (as an argument)
+	iterate from up from 0 until the index of a -1 in a passed image
+for each of those iterations, write the resultant brightness value to the file followed by a space
+	and end each row in a -1 and a newline
+    • loadImage() (Kassie): 
+create a variable for the current row being written to which starts at 0
+while values are being read from a passed file argument
+	write the values to the passed 2D image array at the current row
+if a -1 is read
+	increase the row variable by one
+    • displayImage() (Gonzalez): 
+iterate from 0 up to a passed number of rows (argument)
+	iterate from up from 0 until the index of a -1 in a passed image
+		print the current pixel
+	after every row print a newline
+    • cropImage() (Kassie): 
+ask the user for a starting and ending row
+ask the user for a starting and ending column
+iterate a number of times equal to the height of the new image
+set the row at the current index to the row at (the current index + the starting row of the crop)
+iterate a number of times equal to the width of the new image
+for the row at the current row index (outer loop), set the item at the current item index to the item at (the current item index + the starting column of the crop)
+	set the item at the width of the new image (end of the cropped row) to -1
+set height variable equal to the new cropped image height
+    • brighten() and darken() (Gonzalez):
+for every pixel (nested loops)
+	add or subtract one from brightness, clamping at 0 and 4
