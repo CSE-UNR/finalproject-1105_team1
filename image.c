@@ -3,8 +3,8 @@
 // Purpose: Image Processing
 #include<stdio.h>
 
-void saveImage(FILE* fptr);
-int loadImage(FILE* fptr);
+void saveImage(FILE* fptr, int rows, int colCapacity, int image[][colCapacity]);
+int loadImage(FILE* fptr, int colCapacity, int image[][colCapacity]);
 int cropImage(int colCapacity, int image[][colCapacity]);
 
 int main() {
@@ -14,16 +14,16 @@ int main() {
 void saveImage(FILE* fptr, int rows, int colCapacity, int image[][colCapacity]) {
     for (int irow = 0; irow < rows; irow++) {
         for (int icol = 0; image[irow][icol] != -1; icol++) {
-            fprintf("%d ", image[irow][icol]);
+            fprintf(fptr, "%d ", image[irow][icol]);
         }
-        fprintf("-1\n");
+        fprintf(fptr, "-1\n");
     }
 }
 
 int loadImage(FILE* fptr, int colCapacity, int image[][colCapacity]) { // Returns the new number of rows in the image
     int irow, icol;
     irow = icol = 0;
-    while (fscanf("%d", &image[irow][icol]) != 0) {
+    while (fscanf(fptr, "%d", &image[irow][icol]) != 0) {
         icol++;
         if (image[irow][icol] == -1) {
             icol = 0;
@@ -53,9 +53,9 @@ int cropImage(int colCapacity, int image[][colCapacity]) { // Returns the new nu
     width = cropColEnd-cropColStart;
     height = cropRowEnd-cropRowStart;
     
-    for (int row = 0; rowOffset < height; rowOffset++) {
+    for (int row = 0; row < height; row++) {
         image[row] = image[row+cropRowStart];
-        for (int col = 0; colOffset < width; colOffset++) {
+        for (int col = 0; col < width; col++) {
             image[row][col] = image[row][col+cropColStart];
         }
         image[row][cropColStart+1] = -1;
