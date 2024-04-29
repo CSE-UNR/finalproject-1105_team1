@@ -54,9 +54,8 @@ int cropImage(int colCapacity, int image[][colCapacity]) { // Returns the new nu
     height = cropRowEnd-cropRowStart;
     
     for (int row = 0; row < height; row++) {
-        image[row] = image[row+cropRowStart];
         for (int col = 0; col < width; col++) {
-            image[row][col] = image[row][col+cropColStart];
+            image[row][col] = image[row+cropRowStart][col+cropColStart];
         }
         image[row][cropColStart+1] = -1;
     }
