@@ -121,24 +121,6 @@ int main() {
 
 //From what i tested in the code, so far it works and there are just a couple things to fix so it can match the executable. there are still some parts to finish like implementing the crop function into the main and  converting the numbers into symbols ( such as 0 = space, 2 = the letter o, etc). i will try to work more on it wednesday night but if not for sure thursday night. For the most part though we are almost done.
 
-
-
-
-
-
-
-   /*
-   NOTES:
-   saveImage(), loadImage(), and cropImage() are all tested and functional
-   we forgot to add an editMenu() function but since that was included in our plan for the main function I'll leave that to you
-   since file opening is connected with io (prompting for a filename) I left that out of the loading and saving functions
-   and since cropImage needs input that should go in the editMenu() function as well
-   null termination is no longer implemented in the array so there is both a rows and cols int which store the size of the image
-   however, there *is* null termination in the way the file is saved, i.e., at the end of every row there's written a -1
-   these values are not used other than the identify row ends but it's important if you want to create your own images for testing
-   just see the imgdata.txt file for the syntax
-   email me or leave a comment if you need anything
-   */   
 }
 
 void saveImage(FILE* fptr, int rows, int cols, int colCapacity, int image[][colCapacity]) {
@@ -148,17 +130,19 @@ void saveImage(FILE* fptr, int rows, int cols, int colCapacity, int image[][colC
             // Store the current pixel brightness value
             fprintf(fptr, "%d ", image[irow][icol]);
         }
-        // "null-terminate" with -1's to indicate the end of a row
-        fprintf(fptr, "-1\n");
+        if (irow != rows-1) {
+            fprintf(fptr, "\n");
+        }
     }
 }
 
 int loadImage(FILE* fptr, int* cols, int colCapacity, int image[][colCapacity]) {
     int irow, icol;
     irow = icol = 0;
+    char separator;
     // Reads values while they're found
-    while (fscanf(fptr, "%d", &image[irow][icol]) == 1) {
-        if (image[irow][icol] == -1) {
+    while (fscanf(fptr, "%d%c", &image[irow][icol], &separator) == 2) {
+        if (separator == '\n') {
             // If the end of a row is reached, reset to the start of the next row
             if (irow == 0) {
                 // Assigns the new number of columns (checks if it's the first row to avoid multiple assignments)
@@ -183,6 +167,7 @@ void displayImage(int irow, int cols, int image[][CAPACITY]){
         printf("\n");
     }
 }
+
 int editMenu(){
     int userchoice2;
     
