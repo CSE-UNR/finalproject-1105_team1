@@ -193,7 +193,7 @@ char pixelChar(int brightness) {
 void displayImage(int rows, int cols, int image[][CAPACITY]){
     for(int i = 0; i < rows; i++){
         for(int j = 0; j < cols; j++){
-            printf("%c ", pixelChar(image[i][j]));
+            printf("%c", pixelChar(image[i][j]));
         }
         printf("\n");
     }
