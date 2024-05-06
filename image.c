@@ -8,6 +8,7 @@
 
 void saveImage(FILE* fptr, int rows, int cols, int image[][CAPACITY]);
 int loadImage(FILE* fptr, int* cols, int image[][CAPACITY]);
+int brighIntToChar(char brightness);
 char pixelChar(int brightness);
 void displayImage(int rows, int cols, int image[][CAPACITY]); 
 void editMenu(int* rows, int* cols, int image[][CAPACITY]); 
@@ -112,11 +113,14 @@ void editMenu(int* rows, int* cols, int image[][CAPACITY]){
                     printf("\nImage successfully saved\n");
                 }
                 
+                printf("New Image:\n");
+                displayImage(*rows, *cols, image);
+                
                 printf("Returning to main menu.\n");
                 return;
             }
         }
-    } while (selection != 0);
+    } while (menu_option != 0);
     printf("Returning to main menu.\n");
 }
 
@@ -126,9 +130,6 @@ void saveImage(FILE* fptr, int rows, int cols, int image[][CAPACITY]) {
         for (int icol = 0; icol < cols; icol++) {
             // Store the current pixel brightness value
             fprintf(fptr, "%d", image[irow][icol]);
-            if (icol < cols-1) {
-                fprintf(fptr, " ");
-            }
         }
         if (irow != rows-1) {
             fprintf(fptr, "\n");
@@ -137,26 +138,41 @@ void saveImage(FILE* fptr, int rows, int cols, int image[][CAPACITY]) {
 }
 
 int loadImage(FILE* fptr, int* cols, int image[][CAPACITY]) {
-    int irow, icol;
-    irow = icol = 0;
-    char separator;
+    int icol, irow;
+    icol = irow = 0;
+    char pixel;
+    
     // Reads values while they're found
-    while (fscanf(fptr, "%d%c", &image[irow][icol], &separator) == 2) {
-        if (separator == '\n') {
-            // If the end of a row is reached, reset to the start of the next row
+    while (fscanf(fptr, "%c", &pixel) == 1) {
+        if (pixel == '\n') {
             if (irow == 0) {
-                // Assigns the new number of columns (checks if it's the first row to avoid multiple assignments)
-                *cols = icol+1;
+                *cols = icol;
             }
-            icol = 0;
             irow++;
+            icol = 0;
         } else {
-            // Otherwise move to the next item in the row
+            image[irow][icol] = brighIntToChar(pixel);
             icol++;
         }
     }
+    
     // Return the new image height
     return irow+1;
+}
+
+int brighIntToChar(char brightness) {
+    switch (brightness) {
+        case '0':
+            return 0;
+        case '1':
+            return 1;
+        case '2':
+            return 2;
+        case '3':
+            return 3;
+        case '4':
+            return 4;
+    }
 }
 
 char pixelChar(int brightness) {
