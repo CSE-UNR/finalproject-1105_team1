@@ -13,6 +13,7 @@ char pixelChar(int brightness);
 void displayImage(int rows, int cols, int image[][CAPACITY]); 
 void editMenu(int* rows, int* cols, int image[][CAPACITY]); 
 int cropImage(int cropRowStart, int cropRowEnd, int cropColStart, int cropColEnd, int rows, int* cols, int image[][CAPACITY]);
+int rotateImage(int rows, int* cols, int image[][CAPACITY]);
 void dimImage(int rows, int cols, int image[][CAPACITY]);
 void brightenImage(int rows, int cols, int image[][CAPACITY]);
 
@@ -45,7 +46,7 @@ int main() {
                 printf("Image successfully loaded\n");
                 file_loaded = true;
             }
-        } else if (selection != 2 || selection != 3) {
+        } else if (selection == 2 || selection == 3) {
             if (!file_loaded) {
                 printf("No image is currently loaded.\n");
             } else if (selection == 2) {
@@ -70,6 +71,7 @@ void editMenu(int* rows, int* cols, int image[][CAPACITY]){
         printf("1: Crop image\n");
         printf("2: Dim image\n");
         printf("3: Brighten image\n");
+        printf("4: Rotate image\n");
         printf("0: Return to main menu\n\n");
         
         printf("Choose from one of the options above: ");
@@ -89,12 +91,14 @@ void editMenu(int* rows, int* cols, int image[][CAPACITY]){
             dimImage(*rows, *cols, image); //Dims the image
         } else if (menu_option == 3) {
             brightenImage(*rows, *cols, image); //Dims the image
+        } else if (menu_option == 4) {
+            *rows = rotateImage(*rows, cols, image);
         } else if (menu_option != 0) {
             printf("Invalid input.\n");
         }
         
         // If the image was edited
-        if (menu_option == 1 || menu_option == 2 || menu_option == 3) {
+        if (menu_option == 1 || menu_option == 2 || menu_option == 3 || menu_option == 4) {
             printf("New Image:\n\n");
             displayImage(*rows, *cols, image);
             printf("\nSave changes to a file (y/n)? ");
@@ -245,6 +249,27 @@ int cropImage(int cropRowStart, int cropRowEnd, int cropColStart, int cropColEnd
     
     // Return the new number of rows for external use
     return height;
+}
+
+int rotateImage(int rows, int* cols, int image[][CAPACITY]) {
+    int temp, rotated[CAPACITY][CAPACITY];
+    
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < *cols; col++) {
+            rotated[col][rows-row-1] = image[row][col];
+        }
+    }
+    
+    for (int row = 0; row < *cols; row++) {
+        for (int col = 0; col < rows; col++) {
+            image[row][col] = rotated[row][col];
+        }
+    }
+    
+    temp = *cols;
+    *cols = rows;
+    
+    return temp;
 }
 
 void dimImage(int rows, int cols, int image[][CAPACITY]){
