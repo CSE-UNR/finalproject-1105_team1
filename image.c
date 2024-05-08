@@ -8,7 +8,6 @@
 
 void saveImage(FILE* fptr, int rows, int cols, int image[][CAPACITY]);
 int loadImage(FILE* fptr, int* cols, int image[][CAPACITY]);
-int brighIntToChar(char brightness);
 char pixelChar(int brightness);
 void displayImage(int rows, int cols, int image[][CAPACITY]); 
 void editMenu(int* rows, int* cols, int image[][CAPACITY]); 
@@ -98,7 +97,7 @@ void editMenu(int* rows, int* cols, int image[][CAPACITY]){
         }
         
         // If the image was edited
-        if (menu_option == 1 || menu_option == 2 || menu_option == 3 || menu_option == 4) {
+        if (menu_option > 0 && menu_option <= 4) {
             printf("New Image:\n\n");
             displayImage(*rows, *cols, image);
             printf("\nSave changes to a file (y/n)? ");
@@ -154,29 +153,14 @@ int loadImage(FILE* fptr, int* cols, int image[][CAPACITY]) {
             }
             irow++;
             icol = 0;
-        } else {
-            image[irow][icol] = brighIntToChar(pixel);
+        } else if (pixel != ' ') {
+            image[irow][icol] = pixel-'0';
             icol++;
         }
     }
     
     // Return the new image height
     return irow+1;
-}
-
-int brighIntToChar(char brightness) {
-    switch (brightness) {
-        case '0':
-            return 0;
-        case '1':
-            return 1;
-        case '2':
-            return 2;
-        case '3':
-            return 3;
-        case '4':
-            return 4;
-    }
 }
 
 char pixelChar(int brightness) {
